@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TimelineViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TimelineViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetDelegate {
 
     @IBOutlet private weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
@@ -57,6 +57,11 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         return cell
     }
     
+    func onNewTweet(tweet:Tweet) {
+        self.tweets.insert(tweet, atIndex: 0)
+        self.tableView.reloadData()
+    }
+    
     func onRefresh() {
         self.loadMoreTweets(true, endInfiniteLoad: false);
     }
@@ -90,6 +95,13 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.infiniteLoadingStarted = false;
             }
         }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        var nav = segue.destinationViewController as! UINavigationController
+        var vc = nav.topViewController as! TweetViewController
+        vc.delegate = self
     }
 }
 

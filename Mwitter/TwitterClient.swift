@@ -107,8 +107,10 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     }
     
     func tweet(text:String, callback:((Tweet?)->Void)) {
+        
+        var urlString = "1.1/statuses/update.json?status=" + text
         self.POST(
-            "1.1/statuses/update.json",
+            urlString,
             parameters: nil,
             constructingBodyWithBlock: nil,
             success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
