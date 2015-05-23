@@ -28,7 +28,7 @@ class TweetCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        self.clearSpaceBeforeRowLine()
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -41,24 +41,37 @@ class TweetCell: UITableViewCell {
         
         self.userPhotoView.setImageWithURL(NSURL(string:tweet.user!.profileImageUrl))
         self.nameLabel.text = tweet.user!.name
-        self.screenNameLabel.text = tweet.user!.name
+        self.screenNameLabel.text = "@" + tweet.user!.name
         self.createdAtLabel.text = tweet.createdAt!.timeAgoSimple()
         self.tweetContentLabel.text = tweet.text
         self.favCountLabel.text = tweet.favoritesCount.description
         self.retweetCountLabel.text = tweet.retweetCount.description
         
         if tweet.favorited {
-            self.favoriteIcon.image = TweetCell.favoriteImage
+            self.favoriteIcon.image = TweetCell.favoriteOnImage
         }
         else {
-            self.favoriteIcon.image = TweetCell.favoriteOnImage
+            self.favoriteIcon.image = TweetCell.favoriteImage
         }
         
         if tweet.retweeted {
-            self.retweetIcon.image = TweetCell.retweetImage
+            self.retweetIcon.image = TweetCell.retweetOnImage   
         }
         else {
-            self.retweetIcon.image = TweetCell.retweetOnImage
+            self.retweetIcon.image = TweetCell.retweetImage
+        }
+    }
+    
+    func clearSpaceBeforeRowLine() {
+        
+        if (self.respondsToSelector(Selector("setPreservesSuperviewLayoutMargins:"))){
+            self.preservesSuperviewLayoutMargins = false
+        }
+        if (self.respondsToSelector(Selector("setSeparatorInset:"))){
+            self.separatorInset = UIEdgeInsetsMake(0, 4, 0, 0)
+        }
+        if (self.respondsToSelector(Selector("setLayoutMargins:"))){
+            self.layoutMargins = UIEdgeInsetsZero
         }
     }
 }
