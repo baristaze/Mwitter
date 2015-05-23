@@ -27,31 +27,31 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mrj-ab-5yb">
-                                                    <rect key="frame" x="8" y="8" width="100" height="100"/>
+                                                    <rect key="frame" x="8" y="8" width="70" height="70"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="100" id="Qug-MN-TVu"/>
-                                                        <constraint firstAttribute="width" constant="100" id="Vy6-AN-d0C"/>
+                                                        <constraint firstAttribute="height" constant="70" id="Qug-MN-TVu"/>
+                                                        <constraint firstAttribute="width" constant="70" id="Vy6-AN-d0C"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Baris Taze" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYY-Q2-c5j">
-                                                    <rect key="frame" x="116" y="8" width="76.5" height="19.5"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Baris Taze" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYY-Q2-c5j">
+                                                    <rect key="frame" x="86" y="8" width="76.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@baristaze" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XyM-iB-07R">
-                                                    <rect key="frame" x="200" y="10" width="60.5" height="14.5"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="@baristaze" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XyM-iB-07R">
+                                                    <rect key="frame" x="170" y="10" width="347" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 hours ago" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gPJ-5C-aak">
-                                                    <rect key="frame" x="525" y="8" width="66.5" height="14.5"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="3 hours ago" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gPJ-5C-aak">
+                                                    <rect key="frame" x="525" y="10" width="66.5" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KAU-55-uy3">
-                                                    <rect key="frame" x="116" y="29" width="476" height="55"/>
+                                                    <rect key="frame" x="86" y="29" width="506" height="55"/>
                                                     <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -93,10 +93,10 @@
                                             <constraints>
                                                 <constraint firstItem="mrj-ab-5yb" firstAttribute="leading" secondItem="ovB-ya-zPA" secondAttribute="leading" constant="8" id="4wR-8w-fgy"/>
                                                 <constraint firstAttribute="bottom" secondItem="hjm-JW-1lN" secondAttribute="bottom" constant="8" id="5kS-fK-4kx"/>
-                                                <constraint firstAttribute="bottom" secondItem="mrj-ab-5yb" secondAttribute="bottom" constant="8" id="8FA-Mf-TYD"/>
                                                 <constraint firstItem="ARp-vF-21W" firstAttribute="leading" secondItem="hjm-JW-1lN" secondAttribute="trailing" constant="8" id="9hy-5H-urS"/>
                                                 <constraint firstItem="XyM-iB-07R" firstAttribute="leading" secondItem="GYY-Q2-c5j" secondAttribute="trailing" constant="8" id="BQs-DO-D68"/>
                                                 <constraint firstItem="GYY-Q2-c5j" firstAttribute="top" secondItem="ovB-ya-zPA" secondAttribute="top" constant="8" id="Kzf-Pv-iSM"/>
+                                                <constraint firstItem="gPJ-5C-aak" firstAttribute="leading" secondItem="XyM-iB-07R" secondAttribute="trailing" constant="8" id="Mnr-mz-U5L"/>
                                                 <constraint firstItem="3lW-yl-Yhh" firstAttribute="leading" secondItem="ARp-vF-21W" secondAttribute="trailing" constant="4" id="Ouj-cC-dbH"/>
                                                 <constraint firstAttribute="bottom" secondItem="8eL-5e-7De" secondAttribute="bottom" constant="8" id="P49-H2-9xD"/>
                                                 <constraint firstAttribute="trailing" secondItem="3lW-yl-Yhh" secondAttribute="trailing" constant="8" id="PIa-F4-nEW"/>
@@ -111,7 +111,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="gPJ-5C-aak" secondAttribute="trailing" constant="8.5" id="jPQ-IE-Yyr"/>
                                                 <constraint firstItem="GYY-Q2-c5j" firstAttribute="leading" secondItem="mrj-ab-5yb" secondAttribute="trailing" constant="8" id="mb1-91-UZt"/>
                                                 <constraint firstItem="KAU-55-uy3" firstAttribute="leading" secondItem="mrj-ab-5yb" secondAttribute="trailing" constant="8" id="qrT-W7-d84"/>
-                                                <constraint firstItem="gPJ-5C-aak" firstAttribute="top" secondItem="ovB-ya-zPA" secondAttribute="top" constant="8" id="tZ4-Vb-rMB"/>
+                                                <constraint firstItem="gPJ-5C-aak" firstAttribute="top" secondItem="ovB-ya-zPA" secondAttribute="top" constant="10" id="tZ4-Vb-rMB"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

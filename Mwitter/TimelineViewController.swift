@@ -11,6 +11,8 @@ import UIKit
 class TimelineViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet private weak var tableView: UITableView!
+    var refreshControl:UIRefreshControl!
+    var infiniteLoadingStarted = false
     
     private var tweets = [Tweet]()
     
@@ -21,12 +23,12 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         self.tableView.estimatedRowHeight = 120
         self.tableView.rowHeight = UITableViewAutomaticDimension
         
-        TwitterClient.sharedInstance.getHomeTimeline { (tweets:[Tweet]?) -> Void in
-            if(tweets != nil){
-                self.tweets = tweets!
-                self.tableView.reloadData()
-            }
-        }
+        // create refreshing control
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.tableView.insertSubview(self.refreshControl, atIndex: 0)
+        
+        self.loadMoreTweets(false, endInfiniteLoad:false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,7 +49,47 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         var cell = self.tableView.dequeueReusableCellWithIdentifier("tweet.cell", forIndexPath: indexPath) as! TweetCell
         var tweet = self.tweets[indexPath.row]
         cell.reloadDataFrom(tweet)
+        
+        //if(!self.infiniteLoadingStarted && indexPath.row == (self.tweets.count-1)){
+        //    self.loadMoreTweets(false, endInfiniteLoad: true)
+        //}
+        
         return cell
+    }
+    
+    func onRefresh() {
+        self.loadMoreTweets(true, endInfiniteLoad: false);
+    }
+    
+    func loadMoreTweets(endRefreshing:Bool, endInfiniteLoad:Bool){
+        
+        let showSpinner = !endRefreshing && !endInfiniteLoad
+        var sinceId:Int64? = self.tweets.count > 0 ? self.tweets[0].id : nil
+        TwitterClient.sharedInstance.getHomeTimelineSince(sinceId) { (tweets:[Tweet]?) -> Void in
+            if(tweets != nil){
+                if(endRefreshing){
+                    var index = 0
+                    for tweet in tweets! {
+                        self.tweets.insert(tweet, atIndex: index++)
+                    }
+                }
+                else {
+                    for tweet in tweets! {
+                        self.tweets.append(tweet)
+                    }
+                }
+                
+                self.tableView.reloadData()
+            }
+            
+            if(endRefreshing){
+                self.refreshControl.endRefreshing()
+            }
+            
+            if(endInfiniteLoad){
+                self.infiniteLoadingStarted = false;
+            }
+        }
     }
 }
 

@@ -86,18 +86,24 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         }
     }
     
-    func getHomeTimeline(callback:(([Tweet]?)->Void)) {
+    func getHomeTimelineSince(sinceId:Int64?, callback:(([Tweet]?)->Void)) {
         
-        // ?count=20&since_id=12345
-        self.GET("1.1/statuses/home_timeline.json", parameters: nil, success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
-            println("timeline retrieved successfully");
-            let tweets = Tweet.fromArray(response as! NSArray)
-            callback(tweets);
-            
-            }) { (AFHTTPRequestOperation, NSError) -> Void in
-                callback(nil);
-                println("retrieving timeline failed");
+        var urlString = "1.1/statuses/home_timeline.json"
+        if(sinceId != nil){
+            urlString += "?since_id=" + sinceId!.description
         }
+        self.GET(
+            urlString,
+            parameters: nil,
+            success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+                println("timeline retrieved successfully");
+                let tweets = Tweet.fromArray(response as! NSArray)
+                callback(tweets)
+            },
+            failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
+                callback(nil)
+                println("retrieving timeline failed: %@", error)
+        })
     }
     
     func tweet(text:String, callback:((Tweet?)->Void)) {
@@ -162,7 +168,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
             println(account?.screenName ?? "no screenname")
         }
         
-        self.getHomeTimeline { (tweets: [Tweet]?) -> Void in
+        self.getHomeTimelineSince(nil) { (tweets: [Tweet]?) -> Void in
             let count = tweets?.count ?? 0
             println(tweets?.count.description ?? "no tweets")
             if tweets != nil {
