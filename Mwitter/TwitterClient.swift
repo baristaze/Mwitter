@@ -24,7 +24,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     
     static let sharedInstance = TwitterClient(baseUrl:NSURL(string:kBaseUrl), consumerKey:kConsumerKey, consumerSecret:kConsumerSecret)
     
-    func requestAccessToken() -> Void {
+    func requestAccessToken() {
         
         self.requestSerializer.removeAccessToken()
         
@@ -37,7 +37,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
             failure: self.onRequestTokenError)
     }
     
-    func fetchAuthorizeToken(requestToken:BDBOAuth1Credential!) -> Void {
+    func fetchAuthorizeToken(requestToken:BDBOAuth1Credential!) {
         
         self.fetchAccessTokenWithPath(
             "oauth/access_token",
@@ -47,7 +47,34 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
             failure: self.onAccessTokenError)
     }
     
-    private func onRequestTokenSuccess(requestToken:BDBOAuth1Credential!) -> Void {
+    func getCurrentAccount(callback:((Account?)->Void)){
+        
+        self.GET("1.1/account/verify_credentials.json", parameters: nil, success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+            println("account retrieved successfully");
+            let a = Account().initWithDictionary(response as! NSDictionary)
+            callback(a);
+            
+        }) { (AFHTTPRequestOperation, NSError) -> Void in
+            callback(nil);
+            println("retrieving account failed");
+        }
+    }
+    
+    func getHomeTimeline(callback:(([Tweet]?)->Void)) {
+        
+        // ?count=20&since_id=12345
+        self.GET("1.1/statuses/home_timeline.json", parameters: nil, success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+            println("timeline retrieved successfully");
+            let tweets = Tweet.fromArray(response as! NSArray)
+            callback(tweets);
+            
+            }) { (AFHTTPRequestOperation, NSError) -> Void in
+                callback(nil);
+                println("retrieving timeline failed");
+        }
+    }
+    
+    private func onRequestTokenSuccess(requestToken:BDBOAuth1Credential!) {
     
         println("request token retrieved")
         let urlString = String(format: "%@/oauth/authorize?oauth_token=%@", TwitterClient.kBaseUrl, requestToken.token)
@@ -55,21 +82,35 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         UIApplication.sharedApplication().openURL(url!)
     }
     
-    private func onRequestTokenError(error:NSError!) -> Void {
+    private func onRequestTokenError(error:NSError!) {
         
         UIAlertView(title: "Error", message: "request token failed", delegate: nil, cancelButtonTitle: "OK").show()
     }
     
-    private func onAccessTokenSuccess(accessToken:BDBOAuth1Credential!) -> Void {
+    private func onAccessTokenSuccess(accessToken:BDBOAuth1Credential!) {
         
         println("access token retrieved")
         self.requestSerializer.saveAccessToken(accessToken)
         //let urlString = String(format: "%@/oauth/authorize?oauth_token=%@", TwitterClient.kBaseUrl, requestToken)
         //let url = NSURL(string: urlString)
         //UIApplication.sharedApplication().openURL(url!)
+        
+        self.getCurrentAccount { (account:Account?) -> Void in
+            println(account == nil ? "no Account" : ("there we go Account: " + account!.screenName))
+        }
+        
+        self.getHomeTimeline { (tweets: [Tweet]?) -> Void in
+            let count = tweets?.count ?? 0
+            println(tweets == nil ? "no tweets" : ("there we go tweets: " + count.description))
+            if tweets != nil {
+                for tweet in tweets! {
+                    println(String(format:"%@ - %@", tweet.createdAt!.timeAgo(), tweet.text))
+                }
+            }
+        }
     }
     
-    private func onAccessTokenError(error:NSError!) -> Void {
+    private func onAccessTokenError(error:NSError!) {
         
         UIAlertView(title: "Error", message: "access token failed", delegate: nil, cancelButtonTitle: "OK").show()
     }
