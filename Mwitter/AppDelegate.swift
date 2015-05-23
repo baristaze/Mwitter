@@ -62,13 +62,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TwitterClientProtocol {
     
     func startTweetoStoryBoard() {
         var tweeto = UIStoryboard(name: "Tweeto", bundle: nil)
-        let viewcontroller: UIViewController = tweeto.instantiateViewControllerWithIdentifier("timelineVC") as! UIViewController
+        let viewcontroller: UIViewController = tweeto.instantiateInitialViewController() as! UIViewController
+        //let viewcontroller: UIViewController = tweeto.instantiateViewControllerWithIdentifier("timelineVC") as! UIViewController
         self.window!.rootViewController = viewcontroller
     }
     
     func startLoginStoryBoard() {
         var loginSB = UIStoryboard(name: "Login", bundle: nil)
-        let viewcontroller: UIViewController = loginSB.instantiateViewControllerWithIdentifier("loginVC") as! UIViewController
+        let viewcontroller: UIViewController = loginSB.instantiateInitialViewController() as! UIViewController
+        //let viewcontroller: UIViewController = loginSB.instantiateViewControllerWithIdentifier("loginVC") as! UIViewController
         self.window!.rootViewController = viewcontroller
     }
 }
