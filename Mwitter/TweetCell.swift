@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol TweetUpdateDelegate {
+    func onFavorited(tweet:Tweet, responseTweet:Tweet, sender:TweetCell)
+    func onRetweeted(tweet:Tweet, responseTweet:Tweet, sender:TweetCell)
+}
+
 class TweetCell: UITableViewCell {
 
     @IBOutlet private weak var userPhotoView: UIImageView!
@@ -26,9 +31,22 @@ class TweetCell: UITableViewCell {
     static let retweetImage = UIImage(named: "retweet_default")
     static let retweetOnImage = UIImage(named: "retweet_on")
     
+    private var favoriteTapRecognizer:UITapGestureRecognizer?
+    private var retweetTapRecognizer:UITapGestureRecognizer?
+    
+    private var currentTweet:Tweet?
+    
+    var delegate:TweetUpdateDelegate?
+    
     override func awakeFromNib() {
+        
         super.awakeFromNib()
         self.clearSpaceBeforeRowLine()
+        
+        self.favoriteTapRecognizer = UITapGestureRecognizer(target:self, action:Selector("onFav:"))
+        self.retweetTapRecognizer = UITapGestureRecognizer(target:self, action:Selector("onRetweet:"))
+        self.favoriteIcon.addGestureRecognizer(self.favoriteTapRecognizer!)
+        self.retweetIcon.addGestureRecognizer(self.retweetTapRecognizer!)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -38,6 +56,8 @@ class TweetCell: UITableViewCell {
     }
     
     func reloadDataFrom(tweet:Tweet) {
+        
+        self.currentTweet = tweet
         
         self.userPhotoView.setImageWithURL(NSURL(string:tweet.user!.profileImageUrl))
         self.nameLabel.text = tweet.user!.name
@@ -73,5 +93,23 @@ class TweetCell: UITableViewCell {
         if (self.respondsToSelector(Selector("setLayoutMargins:"))){
             self.layoutMargins = UIEdgeInsetsZero
         }
+    }
+    
+    func onFav(recognizer:UITapGestureRecognizer){
+        println("tap")
+        TwitterClient.sharedInstance.favoriteById(self.currentTweet!.id, callback: { (updatedTweet:Tweet?) -> Void in
+            if(updatedTweet != nil) {
+                self.delegate?.onFavorited(self.currentTweet!, responseTweet: updatedTweet!, sender:self)
+            }
+        })
+    }
+    
+    func onRetweet(recognizer:UITapGestureRecognizer){
+        println("tap")
+        TwitterClient.sharedInstance.retweetById(self.currentTweet!.id, callback: { (updatedTweet:Tweet?) -> Void in
+            if(updatedTweet != nil) {
+                self.delegate?.onRetweeted(self.currentTweet!, responseTweet: updatedTweet!, sender:self)
+            }
+        })
     }
 }

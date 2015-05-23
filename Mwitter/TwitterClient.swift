@@ -126,7 +126,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     
     func retweetById(id:Int64, callback:((Tweet?)->Void)) {
         
-        var urlString = String(format:"1.1/statuses/retweet/%d.json", id)
+        var urlString = String(format:"1.1/statuses/retweet/%@.json", id.description)
         self.POST(
             urlString,
             parameters: nil,
@@ -144,7 +144,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     
     func favoriteById(id:Int64, callback:((Tweet?)->Void)) {
         
-        var urlString = String(format:"1.1/favorites/create.json?id=%d", id)
+        var urlString = String(format:"1.1/favorites/create.json?id=%@", id.description)
         self.POST(
             urlString,
             parameters: nil,
@@ -155,7 +155,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
                 callback(tweet)
             })
             { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                println("fav failed")
+                println("fav failed: %@", error)
                 callback(nil)
         }
     }

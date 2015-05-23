@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TimelineViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetDelegate {
+class TimelineViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewTweetDelegate, TweetUpdateDelegate {
 
     @IBOutlet private weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
@@ -49,6 +49,7 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         var cell = self.tableView.dequeueReusableCellWithIdentifier("tweet.cell", forIndexPath: indexPath) as! TweetCell
         var tweet = self.tweets[indexPath.row]
         cell.reloadDataFrom(tweet)
+        cell.delegate = self
         
         //if(!self.infiniteLoadingStarted && indexPath.row == (self.tweets.count-1)){
         //    self.loadMoreTweets(false, endInfiniteLoad: true)
@@ -60,6 +61,24 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
     func onNewTweet(tweet:Tweet) {
         self.tweets.insert(tweet, atIndex: 0)
         self.tableView.reloadData()
+    }
+    
+    func onFavorited(tweet:Tweet, responseTweet:Tweet, sender:TweetCell) {
+        let indexPath = self.tableView.indexPathForCell(sender)
+        if indexPath != nil {
+            self.tweets[indexPath!.row].favorited = true
+            self.tweets[indexPath!.row].favoritesCount++
+            self.tableView.reloadData()
+        }
+    }
+    
+    func onRetweeted(tweet:Tweet, responseTweet:Tweet, sender:TweetCell) {
+        let indexPath = self.tableView.indexPathForCell(sender)
+        if indexPath != nil {
+            self.tweets[indexPath!.row].retweeted = true
+            self.tweets[indexPath!.row].retweetCount++
+            self.tableView.reloadData()
+        }
     }
     
     func onRefresh() {
