@@ -8,11 +8,17 @@
 
 import UIKit
 
+protocol TwitterClientProtocol {
+    func onLoginTwitter()
+}
+
 class TwitterClient: BDBOAuth1RequestOperationManager {
  
     private static let kConsumerKey = "IF1zQnMYaTEcVYW2fPXca6iwi"
     private static let kConsumerSecret = "Vp6ajHiolNINK5EsOIwLkf8rpLw8kzSs4aHQQJVLt96nXpvC0b"
     private static let kBaseUrl = "https://api.twitter.com"
+    
+    var delegate:TwitterClientProtocol?
     
     private init(baseUrl:NSURL!, consumerKey:String, consumerSecret:String) {
         super.init(baseURL:baseUrl, consumerKey:consumerKey, consumerSecret:consumerSecret)
@@ -24,7 +30,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     
     static let sharedInstance = TwitterClient(baseUrl:NSURL(string:kBaseUrl), consumerKey:kConsumerKey, consumerSecret:kConsumerSecret)
     
-    func requestAccessToken() {
+    func login() {
         
         self.requestSerializer.removeAccessToken()
         
@@ -33,18 +39,38 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
             method: "GET",
             callbackURL: NSURL(string:"cptwitterdemo://oath"),
             scope: nil,
-            success: self.onRequestTokenSuccess,
-            failure: self.onRequestTokenError)
+            success: { (requestToken:BDBOAuth1Credential!) -> Void in
+                
+                println("request token retrieved")
+                let urlString = String(format: "%@/oauth/authorize?oauth_token=%@", TwitterClient.kBaseUrl, requestToken.token)
+                let url = NSURL(string: urlString)
+                UIApplication.sharedApplication().openURL(url!)
+            },
+            failure: { (error:NSError!) -> Void in
+                UIAlertView(title: "Error", message: "request token failed", delegate: nil, cancelButtonTitle: "OK").show()
+            })
     }
     
-    func fetchAuthorizeToken(requestToken:BDBOAuth1Credential!) {
+    func openUrl(url:NSURL) {
+        
+        let requestToken = BDBOAuth1Credential(queryString: url.query)
         
         self.fetchAccessTokenWithPath(
             "oauth/access_token",
             method: "POST",
             requestToken: requestToken,
-            success: self.onAccessTokenSuccess,
-            failure: self.onAccessTokenError)
+            success: { (accessToken:BDBOAuth1Credential!) -> Void in
+                println("access token retrieved")
+                self.requestSerializer.saveAccessToken(accessToken)
+                if(self.delegate != nil) {
+                    self.delegate!.onLoginTwitter()
+                }
+                // self.adHocTests()
+            },
+            failure: { (error:NSError!) -> Void in
+                UIAlertView(title: "Error", message: "access token failed", delegate: nil, cancelButtonTitle: "OK").show()
+            }
+        )
     }
     
     func getCurrentAccount(callback:((Account?)->Void)){
@@ -74,44 +100,91 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         }
     }
     
-    private func onRequestTokenSuccess(requestToken:BDBOAuth1Credential!) {
-    
-        println("request token retrieved")
-        let urlString = String(format: "%@/oauth/authorize?oauth_token=%@", TwitterClient.kBaseUrl, requestToken.token)
-        let url = NSURL(string: urlString)
-        UIApplication.sharedApplication().openURL(url!)
+    func tweet(text:String, callback:((Tweet?)->Void)) {
+        self.POST(
+            "1.1/statuses/update.json",
+            parameters: nil,
+            constructingBodyWithBlock: nil,
+            success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+                println("tweeted successfully")
+                let tweet = Tweet().initWithDictionary(response as! NSDictionary)
+                callback(tweet)
+            })
+            { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
+                println("tweeting failed: %@", error)
+                callback(nil)
+        }
     }
     
-    private func onRequestTokenError(error:NSError!) {
+    func retweetById(id:Int64, callback:((Tweet?)->Void)) {
         
-        UIAlertView(title: "Error", message: "request token failed", delegate: nil, cancelButtonTitle: "OK").show()
+        var urlString = String(format:"1.1/statuses/retweet/%d.json", id)
+        self.POST(
+            urlString,
+            parameters: nil,
+            constructingBodyWithBlock: nil,
+            success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+                println("retweeted successfully")
+                let tweet = Tweet().initWithDictionary(response as! NSDictionary)
+                callback(tweet)
+            })
+            { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
+                println("retweeted failed: %@", error)
+                callback(nil)
+            }
     }
     
-    private func onAccessTokenSuccess(accessToken:BDBOAuth1Credential!) {
+    func favoriteById(id:Int64, callback:((Tweet?)->Void)) {
         
-        println("access token retrieved")
-        self.requestSerializer.saveAccessToken(accessToken)
-        //let urlString = String(format: "%@/oauth/authorize?oauth_token=%@", TwitterClient.kBaseUrl, requestToken)
-        //let url = NSURL(string: urlString)
-        //UIApplication.sharedApplication().openURL(url!)
+        var urlString = String(format:"1.1/favorites/create.json?id=%d", id)
+        self.POST(
+            urlString,
+            parameters: nil,
+            constructingBodyWithBlock: nil,
+            success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+                println("fav successfully")
+                let tweet = Tweet().initWithDictionary(response as! NSDictionary)
+                callback(tweet)
+            })
+            { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
+                println("fav failed")
+                callback(nil)
+        }
+    }
+    
+    func logout(){
+        self.requestSerializer.removeAccessToken()
+    }
+    
+    private func adHocTests() {
         
         self.getCurrentAccount { (account:Account?) -> Void in
-            println(account == nil ? "no Account" : ("there we go Account: " + account!.screenName))
+            println(account?.screenName ?? "no screenname")
         }
         
         self.getHomeTimeline { (tweets: [Tweet]?) -> Void in
             let count = tweets?.count ?? 0
-            println(tweets == nil ? "no tweets" : ("there we go tweets: " + count.description))
+            println(tweets?.count.description ?? "no tweets")
             if tweets != nil {
                 for tweet in tweets! {
-                    println(String(format:"%@ - %@", tweet.createdAt!.timeAgo(), tweet.text))
+                    // println(String(format:"%@ - %@", tweet.createdAt!.timeAgo(), tweet.text))
                 }
             }
         }
-    }
-    
-    private func onAccessTokenError(error:NSError!) {
         
-        UIAlertView(title: "Error", message: "access token failed", delegate: nil, cancelButtonTitle: "OK").show()
+        self.tweet("test test test", callback: { (tweet:Tweet?) -> Void in
+            println(tweet?.text ?? "no tweet")
+            
+            if(tweet != nil) {
+                
+                self.retweetById(tweet!.id, callback: { (updatedTweet:Tweet?) -> Void in
+                    println(updatedTweet?.retweetCount.description ?? "no retweet")
+                })
+                
+                self.favoriteById(tweet!.id, callback: { (updatedTweet:Tweet?) -> Void in
+                    println(updatedTweet?.favoritesCount.description ?? "no fav")
+                })
+            }
+        })
     }
 }

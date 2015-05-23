@@ -9,13 +9,17 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, TwitterClientProtocol {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        var user = Account.currentUser()
+        if(user != nil) {
+            self.startTweetoStoryBoard()
+        }
+        
         return true
     }
 
@@ -42,10 +46,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
-    
-        let requestToken = BDBOAuth1Credential(queryString: url.query)
-        TwitterClient.sharedInstance.fetchAuthorizeToken(requestToken)
+        TwitterClient.sharedInstance.delegate = self
+        TwitterClient.sharedInstance.openUrl(url)
         return true
+    }
+    
+    func onLoginTwitter() {
+        TwitterClient.sharedInstance.getCurrentAccount({ (account:Account?) -> Void in
+            if(account != nil){
+                account!.saveAsCurrentUser()
+                self.startTweetoStoryBoard()
+            }
+        })
+    }
+    
+    func startTweetoStoryBoard() {
+        var tweeto = UIStoryboard(name: "Tweeto", bundle: nil)
+        let viewcontroller: UIViewController = tweeto.instantiateViewControllerWithIdentifier("timelineVC") as! UIViewController
+        self.window!.rootViewController = viewcontroller
+    }
+    
+    func startLoginStoryBoard() {
+        var loginSB = UIStoryboard(name: "Login", bundle: nil)
+        let viewcontroller: UIViewController = loginSB.instantiateViewControllerWithIdentifier("loginVC") as! UIViewController
+        self.window!.rootViewController = viewcontroller
     }
 }
 

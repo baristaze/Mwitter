@@ -23,7 +23,7 @@ class LoginViewController: UIViewController {
     
     @IBAction func onLoginButton(sender: AnyObject) {
         
-        TwitterClient.sharedInstance.requestAccessToken()
+        TwitterClient.sharedInstance.login()
     }
     
     /*

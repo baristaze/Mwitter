@@ -19,7 +19,11 @@ class TimelineViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    @IBAction func onLogout(sender: AnyObject) {
+        
+        TwitterClient.sharedInstance.logout()
+        (UIApplication.sharedApplication().delegate as! AppDelegate).startLoginStoryBoard()
+    }
 }
 
