@@ -9,8 +9,8 @@
 import UIKit
 
 protocol TweetUpdateDelegate {
-    func onFavorited(tweet:Tweet, responseTweet:Tweet, sender:TweetCell)
-    func onRetweeted(tweet:Tweet, responseTweet:Tweet, sender:TweetCell)
+    func onFavorited(tweet:Tweet, responseTweet:Tweet, sender:TweetCell?)
+    func onRetweeted(tweet:Tweet, responseTweet:Tweet, sender:TweetCell?)
 }
 
 class TweetCell: UITableViewCell {
@@ -96,18 +96,29 @@ class TweetCell: UITableViewCell {
     }
     
     func onFav(recognizer:UITapGestureRecognizer){
-        println("tap")
+        
+        if(self.currentTweet!.favorited){
+            return
+        }
+        
         TwitterClient.sharedInstance.favoriteById(self.currentTweet!.id, callback: { (updatedTweet:Tweet?) -> Void in
             if(updatedTweet != nil) {
+                self.currentTweet!.favorited = true
+                self.currentTweet!.favoritesCount++
                 self.delegate?.onFavorited(self.currentTweet!, responseTweet: updatedTweet!, sender:self)
             }
         })
     }
     
     func onRetweet(recognizer:UITapGestureRecognizer){
-        println("tap")
+        if(self.currentTweet!.retweeted){
+            return
+        }
+        
         TwitterClient.sharedInstance.retweetById(self.currentTweet!.id, callback: { (updatedTweet:Tweet?) -> Void in
             if(updatedTweet != nil) {
+                self.currentTweet!.retweeted = true
+                self.currentTweet!.retweetCount++
                 self.delegate?.onRetweeted(self.currentTweet!, responseTweet: updatedTweet!, sender:self)
             }
         })

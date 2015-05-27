@@ -51,10 +51,6 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         cell.reloadDataFrom(tweet)
         cell.delegate = self
         
-        //if(!self.infiniteLoadingStarted && indexPath.row == (self.tweets.count-1)){
-        //    self.loadMoreTweets(false, endInfiniteLoad: true)
-        //}
-        
         return cell
     }
     
@@ -63,22 +59,12 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         self.tableView.reloadData()
     }
     
-    func onFavorited(tweet:Tweet, responseTweet:Tweet, sender:TweetCell) {
-        let indexPath = self.tableView.indexPathForCell(sender)
-        if indexPath != nil {
-            self.tweets[indexPath!.row].favorited = true
-            self.tweets[indexPath!.row].favoritesCount++
-            self.tableView.reloadData()
-        }
+    func onFavorited(tweet:Tweet, responseTweet:Tweet, sender:TweetCell?) {
+        self.tableView.reloadData()
     }
     
-    func onRetweeted(tweet:Tweet, responseTweet:Tweet, sender:TweetCell) {
-        let indexPath = self.tableView.indexPathForCell(sender)
-        if indexPath != nil {
-            self.tweets[indexPath!.row].retweeted = true
-            self.tweets[indexPath!.row].retweetCount++
-            self.tableView.reloadData()
-        }
+    func onRetweeted(tweet:Tweet, responseTweet:Tweet, sender:TweetCell?) {
+        self.tableView.reloadData()
     }
     
     func onRefresh() {
@@ -116,11 +102,24 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         var nav = segue.destinationViewController as! UINavigationController
-        var vc = nav.topViewController as! TweetViewController
-        vc.delegate = self
+        if(nav.topViewController is TweetViewController){
+            var vc = nav.topViewController as! TweetViewController
+            vc.delegate = self
+        }
+        else {
+            var vc = nav.topViewController as! TweetReadViewController
+            let indexPath = self.tableView.indexPathForSelectedRow()
+            let tweet = self.tweets[indexPath!.row]
+            vc.tweet = tweet
+            vc.delegate = self;
+        }
     }
 }
 
