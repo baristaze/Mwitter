@@ -108,7 +108,9 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     
     func tweet(text:String, callback:((Tweet?)->Void)) {
         
-        var urlString = "1.1/statuses/update.json?status=" + text
+        let textEscaped = text.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+        
+        var urlString = "1.1/statuses/update.json?status=" + textEscaped!
         self.POST(
             urlString,
             parameters: nil,
@@ -156,6 +158,26 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
             })
             { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                 println("fav failed: %@", error)
+                callback(nil)
+        }
+    }
+    
+    func replyById(id:Int64, text:String, callback:((Tweet?)->Void)) {
+        
+        let textEscaped = text.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+        
+        var urlString = "1.1/statuses/update.json?in_reply_to_status_id=" + id.description + "&status=" + textEscaped!
+        self.POST(
+            urlString,
+            parameters: nil,
+            constructingBodyWithBlock: nil,
+            success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+                println("replied successfully")
+                let tweet = Tweet().initWithDictionary(response as! NSDictionary)
+                callback(tweet)
+            })
+            { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
+                println("reply failed: %@", error)
                 callback(nil)
         }
     }

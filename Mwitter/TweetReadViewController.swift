@@ -22,6 +22,8 @@ class TweetReadViewController: UIViewController {
     @IBOutlet weak var retweetCountLabel: UILabel!
     @IBOutlet weak var favImageView: UIImageView!
     @IBOutlet weak var retweetImageView: UIImageView!
+    @IBOutlet weak var replyLabel: UILabel!
+    @IBOutlet weak var replyImageView: UIImageView!
     
     static let favoriteImage = UIImage(named: "favorite_default")
     static let favoriteOnImage = UIImage(named: "favorite_on")
@@ -32,6 +34,9 @@ class TweetReadViewController: UIViewController {
     private var favoriteTapRecognizer:UITapGestureRecognizer?
     private var retweetTapRecognizer:UITapGestureRecognizer?
     
+    private var replyTapRecognizer1:UITapGestureRecognizer?
+    private var replyTapRecognizer2:UITapGestureRecognizer?
+    
     var delegate:TweetUpdateDelegate?
     
     override func viewDidLoad() {
@@ -41,6 +46,11 @@ class TweetReadViewController: UIViewController {
         self.retweetTapRecognizer = UITapGestureRecognizer(target:self, action:Selector("onRetweet:"))
         self.favImageView.addGestureRecognizer(self.favoriteTapRecognizer!)
         self.retweetImageView.addGestureRecognizer(self.retweetTapRecognizer!)
+        
+        self.replyTapRecognizer1 = UITapGestureRecognizer(target:self, action:Selector("onReply:"))
+        self.replyTapRecognizer2 = UITapGestureRecognizer(target:self, action:Selector("onReply:"))
+        self.replyImageView.addGestureRecognizer(self.replyTapRecognizer1!)
+        self.replyLabel.addGestureRecognizer(self.replyTapRecognizer2!)
         
         self.reloadDataFrom(self.tweet!)
     }
@@ -103,6 +113,10 @@ class TweetReadViewController: UIViewController {
         })
     }
 
+    func onReply(recognizer:UITapGestureRecognizer){
+        self.performSegueWithIdentifier("tweet.reply.segue", sender: self)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -112,14 +126,9 @@ class TweetReadViewController: UIViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        var nav = segue.destinationViewController as! UINavigationController
+        var vc = nav.topViewController as! TweetViewController
+        vc.tweetToReply = self.tweet!
     }
-    */
-
 }

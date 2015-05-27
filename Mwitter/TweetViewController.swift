@@ -17,6 +17,7 @@ class TweetViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var charCountLabel: UILabel!
     var delegate:NewTweetDelegate?
+    var tweetToReply:Tweet?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +30,10 @@ class TweetViewController: UIViewController {
         self.charCountLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("onEdit:"), name: UITextViewTextDidChangeNotification, object: nil)
+        
+        if(self.tweetToReply != nil) {
+            self.textView.text = "@" + self.tweetToReply!.user!.screenName
+        }
         
         self.textView.becomeFirstResponder()
     }
@@ -57,18 +62,38 @@ class TweetViewController: UIViewController {
             return
         }
         
-        TwitterClient.sharedInstance.tweet(text, callback: { (tweet:Tweet?) -> Void in
-            if tweet != nil {
-                self.dismissViewControllerAnimated(true){
-                    self.delegate?.onNewTweet(tweet!)
+        if(self.tweetToReply == nil) {
+            TwitterClient.sharedInstance.tweet(text, callback: { (tweet:Tweet?) -> Void in
+                if tweet != nil {
+                    self.dismissViewControllerAnimated(true){
+                        self.delegate?.onNewTweet(tweet!)
+                    }
                 }
+                else {
+                    UIAlertView(title: "Failed", message: "Sending tweet failed. Please try again later!", delegate: nil, cancelButtonTitle: "OK").show()
+                }
+            })
+        }
+        else {
+            let mention = "@" + self.tweetToReply!.user!.screenName
+            if(text.rangeOfString(mention) == nil){
+                UIAlertView(title: "Error", message: "You need to mention " + mention, delegate: nil, cancelButtonTitle: "OK").show()
+                return
             }
             else {
-                UIAlertView(title: "Failed", message: "Sending tweet failed. Please try again later!", delegate: nil, cancelButtonTitle: "OK").show()
+                TwitterClient.sharedInstance.replyById(self.tweetToReply!.id, text: text, callback: { (tweet:Tweet?) -> Void in
+                    if tweet != nil {
+                        self.dismissViewControllerAnimated(true){
+                            self.delegate?.onNewTweet(tweet!)
+                        }
+                    }
+                    else {
+                        UIAlertView(title: "Failed", message: "Replying to the tweet failed. Please try again later!", delegate: nil, cancelButtonTitle: "OK").show()
+                    }
+                })
             }
-        })
+        }
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

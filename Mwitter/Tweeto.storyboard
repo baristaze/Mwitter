@@ -213,7 +213,7 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Reply" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysG-9Z-xj8">
+                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Reply" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysG-9Z-xj8">
                                 <rect key="frame" x="544" y="264" width="32" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -300,15 +300,18 @@
                         <outlet property="favImageView" destination="bIT-rP-S8c" id="Jwb-LV-5Wc"/>
                         <outlet property="nameLabel" destination="bTM-Cq-msD" id="Ci7-Al-27x"/>
                         <outlet property="profileImageView" destination="LZW-rr-P2p" id="fRO-Vg-cTR"/>
+                        <outlet property="replyImageView" destination="dY0-mp-wYa" id="qtX-Ab-OmY"/>
+                        <outlet property="replyLabel" destination="ysG-9Z-xj8" id="rzQ-n8-C59"/>
                         <outlet property="retweetCountLabel" destination="Dkk-Vi-LGr" id="KXd-3K-f4n"/>
                         <outlet property="retweetImageView" destination="IZ1-d4-LiE" id="C31-MA-kvb"/>
                         <outlet property="screenNameLabel" destination="5tk-To-00W" id="Slb-V9-cUn"/>
                         <outlet property="tweetLabel" destination="iFW-4D-RaF" id="VdF-sj-hmL"/>
+                        <segue destination="nCd-J5-Rnh" kind="presentation" identifier="tweet.reply.segue" id="vAW-au-mVM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EJb-cL-OwI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1363" y="1128"/>
+            <point key="canvasLocation" x="1363" y="1080"/>
         </scene>
         <!--Compose-->
         <scene sceneID="hBE-Bv-rDb">
@@ -431,4 +434,7 @@
         <image name="reply" width="16" height="16"/>
         <image name="retweet_default" width="19" height="16"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="vAW-au-mVM"/>
+    </inferredMetricsTieBreakers>
 </document>
