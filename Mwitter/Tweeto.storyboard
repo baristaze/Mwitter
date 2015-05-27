@@ -52,7 +52,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KAU-55-uy3">
-                                                    <rect key="frame" x="86" y="29" width="506" height="55"/>
+                                                    <rect key="frame" x="86" y="29" width="506" height="55.5"/>
                                                     <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -67,6 +67,12 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Reply" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OBn-vQ-BOt">
+                                                    <rect key="frame" x="438" y="92.5" width="32" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <imageView multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favorite_default" translatesAutoresizingMaskIntoConstraints="NO" id="8eL-5e-7De">
                                                     <rect key="frame" x="494" y="92" width="16" height="16"/>
                                                     <constraints>
@@ -75,7 +81,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <imageView multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="retweet_default" translatesAutoresizingMaskIntoConstraints="NO" id="ARp-vF-21W">
-                                                    <rect key="frame" x="547" y="92" width="16" height="16"/>
+                                                    <rect key="frame" x="547" y="92.5" width="16" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="16" id="LL8-iV-2xB"/>
                                                         <constraint firstAttribute="height" constant="16" id="nty-UF-ocv"/>
@@ -90,12 +96,21 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="reply" translatesAutoresizingMaskIntoConstraints="NO" id="q7r-UV-YCM">
+                                                    <rect key="frame" x="414" y="92.5" width="16" height="16"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="16" id="kg0-gj-y1q"/>
+                                                        <constraint firstAttribute="width" constant="16" id="rH3-PT-jtS"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="mrj-ab-5yb" firstAttribute="leading" secondItem="ovB-ya-zPA" secondAttribute="leading" constant="8" id="4wR-8w-fgy"/>
                                                 <constraint firstAttribute="bottom" secondItem="hjm-JW-1lN" secondAttribute="bottom" constant="8" id="5kS-fK-4kx"/>
+                                                <constraint firstItem="8eL-5e-7De" firstAttribute="leading" secondItem="OBn-vQ-BOt" secondAttribute="trailing" constant="24" id="8kD-mW-KZz"/>
                                                 <constraint firstItem="ARp-vF-21W" firstAttribute="leading" secondItem="hjm-JW-1lN" secondAttribute="trailing" constant="8" id="9hy-5H-urS"/>
                                                 <constraint firstItem="XyM-iB-07R" firstAttribute="leading" secondItem="GYY-Q2-c5j" secondAttribute="trailing" constant="8" id="BQs-DO-D68"/>
+                                                <constraint firstAttribute="bottom" secondItem="OBn-vQ-BOt" secondAttribute="bottom" constant="8" id="E9J-zm-8yf"/>
                                                 <constraint firstItem="GYY-Q2-c5j" firstAttribute="top" secondItem="ovB-ya-zPA" secondAttribute="top" constant="8" id="Kzf-Pv-iSM"/>
                                                 <constraint firstItem="gPJ-5C-aak" firstAttribute="leading" secondItem="XyM-iB-07R" secondAttribute="trailing" constant="8" id="Mnr-mz-U5L"/>
                                                 <constraint firstItem="3lW-yl-Yhh" firstAttribute="leading" secondItem="ARp-vF-21W" secondAttribute="trailing" constant="4" id="Ouj-cC-dbH"/>
@@ -111,8 +126,11 @@
                                                 <constraint firstItem="ARp-vF-21W" firstAttribute="top" secondItem="KAU-55-uy3" secondAttribute="bottom" constant="8" id="iy6-so-4CT"/>
                                                 <constraint firstAttribute="trailing" secondItem="gPJ-5C-aak" secondAttribute="trailing" constant="8.5" id="jPQ-IE-Yyr"/>
                                                 <constraint firstItem="GYY-Q2-c5j" firstAttribute="leading" secondItem="mrj-ab-5yb" secondAttribute="trailing" constant="8" id="mb1-91-UZt"/>
+                                                <constraint firstItem="OBn-vQ-BOt" firstAttribute="leading" secondItem="q7r-UV-YCM" secondAttribute="trailing" constant="8" id="nYv-gq-CXY"/>
+                                                <constraint firstItem="OBn-vQ-BOt" firstAttribute="top" secondItem="KAU-55-uy3" secondAttribute="bottom" constant="8" id="ob6-md-1TL"/>
                                                 <constraint firstItem="KAU-55-uy3" firstAttribute="leading" secondItem="mrj-ab-5yb" secondAttribute="trailing" constant="8" id="qrT-W7-d84"/>
                                                 <constraint firstItem="gPJ-5C-aak" firstAttribute="top" secondItem="ovB-ya-zPA" secondAttribute="top" constant="10" id="tZ4-Vb-rMB"/>
+                                                <constraint firstItem="q7r-UV-YCM" firstAttribute="top" secondItem="KAU-55-uy3" secondAttribute="bottom" constant="8" id="uy8-gJ-WSV"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -120,6 +138,8 @@
                                             <outlet property="favCountLabel" destination="hjm-JW-1lN" id="lvB-nd-7ly"/>
                                             <outlet property="favoriteIcon" destination="8eL-5e-7De" id="fTr-8T-k3Q"/>
                                             <outlet property="nameLabel" destination="GYY-Q2-c5j" id="h7n-wR-siW"/>
+                                            <outlet property="replyImageView" destination="q7r-UV-YCM" id="qQ7-35-DKQ"/>
+                                            <outlet property="replyLabel" destination="OBn-vQ-BOt" id="ROk-rz-2NE"/>
                                             <outlet property="retweetCountLabel" destination="3lW-yl-Yhh" id="wdu-pK-IMb"/>
                                             <outlet property="retweetIcon" destination="ARp-vF-21W" id="r5T-xc-G1m"/>
                                             <outlet property="screenNameLabel" destination="XyM-iB-07R" id="tw4-M9-VRP"/>
@@ -151,7 +171,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Tweet" id="BQL-Ad-fVW">
                             <connections>
-                                <segue destination="nCd-J5-Rnh" kind="presentation" id="gum-l3-Mvs"/>
+                                <segue destination="nCd-J5-Rnh" kind="presentation" identifier="tweet.compose.reply" id="gum-l3-Mvs"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -311,7 +331,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EJb-cL-OwI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1363" y="1080"/>
+            <point key="canvasLocation" x="1349" y="1216"/>
         </scene>
         <!--Compose-->
         <scene sceneID="hBE-Bv-rDb">
@@ -408,7 +428,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Af-HG-fKb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1221" y="308"/>
+            <point key="canvasLocation" x="1431" y="298"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="DUl-IP-k1Y">
@@ -435,6 +455,6 @@
         <image name="retweet_default" width="19" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="vAW-au-mVM"/>
+        <segue reference="gum-l3-Mvs"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -16,6 +16,8 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private var tweets = [Tweet]()
     
+    private var tweetToReply:Tweet?
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -71,6 +73,11 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         self.loadMoreTweets(true, endInfiniteLoad: false);
     }
     
+    func onReplyRequest(tweet:Tweet) {
+        self.tweetToReply = tweet
+        self.performSegueWithIdentifier("tweet.compose.reply", sender: self)
+    }
+    
     func loadMoreTweets(endRefreshing:Bool, endInfiniteLoad:Bool){
         
         let showSpinner = !endRefreshing && !endInfiniteLoad
@@ -112,6 +119,10 @@ class TimelineViewController: UIViewController, UITableViewDataSource, UITableVi
         if(nav.topViewController is TweetViewController){
             var vc = nav.topViewController as! TweetViewController
             vc.delegate = self
+            if(self.tweetToReply != nil){
+                vc.tweetToReply = self.tweetToReply!
+                self.tweetToReply = nil
+            }
         }
         else {
             var vc = nav.topViewController as! TweetReadViewController

@@ -11,6 +11,7 @@ import UIKit
 protocol TweetUpdateDelegate {
     func onFavorited(tweet:Tweet, responseTweet:Tweet, sender:TweetCell?)
     func onRetweeted(tweet:Tweet, responseTweet:Tweet, sender:TweetCell?)
+    func onReplyRequest(tweet:Tweet)
 }
 
 class TweetCell: UITableViewCell {
@@ -24,6 +25,8 @@ class TweetCell: UITableViewCell {
     @IBOutlet private weak var retweetCountLabel: UILabel!
     @IBOutlet private weak var favoriteIcon: UIImageView!
     @IBOutlet private weak var retweetIcon: UIImageView!
+    @IBOutlet private weak var replyImageView: UIImageView!
+    @IBOutlet private weak var replyLabel: UILabel!
     
     static let favoriteImage = UIImage(named: "favorite_default")
     static let favoriteOnImage = UIImage(named: "favorite_on")
@@ -33,6 +36,9 @@ class TweetCell: UITableViewCell {
     
     private var favoriteTapRecognizer:UITapGestureRecognizer?
     private var retweetTapRecognizer:UITapGestureRecognizer?
+    
+    private var replyTapRecognizer1:UITapGestureRecognizer?
+    private var replyTapRecognizer2:UITapGestureRecognizer?
     
     private var currentTweet:Tweet?
     
@@ -47,6 +53,11 @@ class TweetCell: UITableViewCell {
         self.retweetTapRecognizer = UITapGestureRecognizer(target:self, action:Selector("onRetweet:"))
         self.favoriteIcon.addGestureRecognizer(self.favoriteTapRecognizer!)
         self.retweetIcon.addGestureRecognizer(self.retweetTapRecognizer!)
+        
+        self.replyTapRecognizer1 = UITapGestureRecognizer(target:self, action:Selector("onReply:"))
+        self.replyTapRecognizer2 = UITapGestureRecognizer(target:self, action:Selector("onReply:"))
+        self.replyImageView.addGestureRecognizer(self.replyTapRecognizer1!)
+        self.replyLabel.addGestureRecognizer(self.replyTapRecognizer2!)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -122,5 +133,9 @@ class TweetCell: UITableViewCell {
                 self.delegate?.onRetweeted(self.currentTweet!, responseTweet: updatedTweet!, sender:self)
             }
         })
+    }
+    
+    func onReply(recognizer:UITapGestureRecognizer){
+        self.delegate?.onReplyRequest(self.currentTweet!)
     }
 }
